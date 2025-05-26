@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
@@ -53,7 +53,7 @@ final class SluggableEventSubscriber
         $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
 
-    private function shouldSkip(ClassMetadataInfo $classMetadataInfo): bool
+    private function shouldSkip(ClassMetadata $classMetadataInfo): bool
     {
         if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
             return true;

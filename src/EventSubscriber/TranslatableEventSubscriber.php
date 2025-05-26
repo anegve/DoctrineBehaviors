@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 use ReflectionClass;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
@@ -82,17 +82,17 @@ final class TranslatableEventSubscriber
         }
 
         if ($fetchMode === 'EAGER') {
-            return ClassMetadataInfo::FETCH_EAGER;
+            return ClassMetadata::FETCH_EAGER;
         }
 
         if ($fetchMode === 'EXTRA_LAZY') {
-            return ClassMetadataInfo::FETCH_EXTRA_LAZY;
+            return ClassMetadata::FETCH_EXTRA_LAZY;
         }
 
-        return ClassMetadataInfo::FETCH_LAZY;
+        return ClassMetadata::FETCH_LAZY;
     }
 
-    private function mapTranslatable(ClassMetadataInfo $classMetadataInfo): void
+    private function mapTranslatable(ClassMetadata $classMetadataInfo): void
     {
         if ($classMetadataInfo->hasAssociation('translations')) {
             return;
@@ -102,7 +102,7 @@ final class TranslatableEventSubscriber
             'fieldName' => 'translations',
             'mappedBy' => 'translatable',
             'indexBy' => self::LOCALE,
-            'cascade' => ['persist', 'merge', 'remove'],
+            'cascade' => ['persist', 'remove'],
             'fetch' => $this->translatableFetchMode,
             'targetEntity' => $classMetadataInfo->getReflectionClass()
                 ->getMethod('getTranslationEntityClass')
@@ -111,7 +111,7 @@ final class TranslatableEventSubscriber
         ]);
     }
 
-    private function mapTranslation(ClassMetadataInfo $classMetadataInfo, ObjectManager $objectManager): void
+    private function mapTranslation(ClassMetadata $classMetadataInfo, ObjectManager $objectManager): void
     {
         if (! $classMetadataInfo->hasAssociation('translatable')) {
             $targetEntity = $classMetadataInfo->getReflectionClass()
@@ -126,7 +126,7 @@ final class TranslatableEventSubscriber
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
                 'inversedBy' => 'translations',
-                'cascade' => ['persist', 'merge'],
+                'cascade' => ['persist'],
                 'fetch' => $this->translationFetchMode,
                 'joinColumns' => [[
                     'name' => 'translatable_id',
@@ -172,7 +172,7 @@ final class TranslatableEventSubscriber
         }
     }
 
-    private function hasUniqueTranslationConstraint(ClassMetadataInfo $classMetadataInfo, string $name): bool
+    private function hasUniqueTranslationConstraint(ClassMetadata $classMetadataInfo, string $name): bool
     {
         return isset($classMetadataInfo->table['uniqueConstraints'][$name]);
     }
