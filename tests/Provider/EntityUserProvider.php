@@ -40,6 +40,9 @@ final class EntityUserProvider implements UserProviderInterface
         $this->userEntities[$name] = $userEntity;
     }
 
+    /**
+     * @return UserEntity
+     */
     public function provideUser()
     {
         $this->prepareUserEntities();
@@ -47,7 +50,7 @@ final class EntityUserProvider implements UserProviderInterface
         return $this->userEntity;
     }
 
-    public function provideUserEntity(): ?string
+    public function provideUserEntity(): string
     {
         return UserEntity::class;
     }

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
 use PHPUnit\Framework\TestCase;
+use Slam\DbalDebugstackMiddleware\DebugStack;
+use Slam\DbalDebugstackMiddleware\Middleware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class AbstractBehaviorTestCase extends TestCase
@@ -18,6 +21,7 @@ abstract class AbstractBehaviorTestCase extends TestCase
      * @var EntityManagerInterface
      */
     protected $entityManager;
+    protected DebugStack $queryLogger;
 
     private ContainerInterface $container;
 
@@ -44,7 +48,7 @@ abstract class AbstractBehaviorTestCase extends TestCase
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
 
-        return $connection->getDatabasePlatform() instanceof PostgreSQL94Platform;
+        return $connection->getDatabasePlatform() instanceof PostgreSQLPlatform;
     }
 
     /**
@@ -55,24 +59,15 @@ abstract class AbstractBehaviorTestCase extends TestCase
         return [];
     }
 
-    protected function createAndRegisterDebugStack(): DebugStack
-    {
-        $debugStack = new DebugStack();
-
-        $this->entityManager->getConnection()
-            ->getConfiguration()
-            ->setSQLLogger($debugStack);
-
-        return $debugStack;
-    }
-
     /**
      * @template T as object
      * @param class-string<T> $type
      * @return T
      */
-    protected function getService(string $type): object
+    protected function getService(string $type)
     {
-        return $this->container->get($type);
+        /** @var T $service */
+        $service = $this->container->get($type);
+        return $service;
     }
 }

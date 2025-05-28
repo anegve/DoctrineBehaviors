@@ -24,11 +24,11 @@ class SoftDeletableEntity implements SoftDeletableInterface
     use SoftDeletableTrait;
 
     #[Id]
-    #[Column(type: 'integer')]
+    #[Column(type: 'integer', nullable: true)]
     #[GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private ?int $id = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

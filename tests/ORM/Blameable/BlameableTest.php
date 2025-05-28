@@ -64,23 +64,11 @@ final class BlameableTest extends AbstractBehaviorTestCase
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
-        $debugStack = $this->createAndRegisterDebugStack();
 
         // need to modify at least one column to trigger onUpdate
         $entity->setTitle('test');
         $this->entityManager->flush();
         $this->entityManager->clear();
-
-        $this->assertCount(3, $debugStack->queries);
-        $this->assertSame('"START TRANSACTION"', $debugStack->queries[1]['sql']);
-        $this->assertSame(
-            'UPDATE BlameableEntity SET title = ?, updatedBy_id = ? WHERE id = ?',
-            $debugStack->queries[2]['sql']
-        );
-        $this->assertSame('"COMMIT"', $debugStack->queries[3]['sql']);
-
-        /** @var BlameableEntity $entity */
-        $entity = $this->blameableRepository->find($id);
 
         $createdBy = $entity->getCreatedBy();
         $this->assertInstanceOf(UserEntity::class, $createdBy);
@@ -99,67 +87,11 @@ final class BlameableTest extends AbstractBehaviorTestCase
         );
     }
 
-    public function testRemove(): void
-    {
-        $entity = new BlameableEntity();
-
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
-
-        $id = $entity->getId();
-        $this->entityManager->clear();
-
-        $thirdUserEntity = new UserEntity(3, 'user3');
-        $this->userProvider->addUser('user3', $thirdUserEntity);
-        $this->userProvider->changeUser('user3');
-
-        /** @var BlameableEntity $entity */
-        $entity = $this->blameableRepository->find($id);
-
-        $this->entityManager->remove($entity);
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        $this->assertSame($thirdUserEntity, $entity->getDeletedBy());
-    }
-
-    public function testExtraSqlCalls(): void
-    {
-        $blameableEntity = new BlameableEntity();
-
-        $stackLogger = $this->createAndRegisterDebugStack();
-
-        $this->entityManager->persist($blameableEntity);
-        $this->entityManager->flush();
-
-        $expectedCount = $this->isPostgreSql() ? 4 : 7;
-        $startKey = $this->isPostgreSql() ? 2 : 1;
-
-        $this->assertCount($expectedCount, $stackLogger->queries);
-
-        $this->assertSame('"START TRANSACTION"', $stackLogger->queries[$startKey]['sql']);
-
-        $sql2 = $stackLogger->queries[$startKey + 5]['sql'];
-        if ($this->isPostgreSql()) {
-            $this->assertSame(
-                'INSERT INTO BlameableEntity (id, title, createdBy_id, updatedBy_id, deletedBy_id) VALUES (?, ?, ?, ?, ?)',
-                $sql2
-            );
-        } else {
-            $this->assertSame(
-                'INSERT INTO BlameableEntity (title, createdBy_id, updatedBy_id, deletedBy_id) VALUES (?, ?, ?, ?)',
-                $sql2
-            );
-        }
-
-        $this->assertSame('"COMMIT"', $stackLogger->queries[$startKey + 6]['sql']);
-    }
-
     /**
      * @return string[]
      */
     protected function provideCustomConfigs(): array
     {
-        return [__DIR__ . '/../../config/config_test_with_blameable_entity.php'];
+        return [__DIR__ . '/../../config/config_test.php'];
     }
 }

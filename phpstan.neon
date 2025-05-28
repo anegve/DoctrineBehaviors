@@ -1,13 +1,6 @@
 includes:
     - phpstan-extension.neon
 
-    - vendor/symplify/phpstan-rules/config/static-rules.neon
-    - vendor/symplify/phpstan-rules/config/array-rules.neon
-    - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
-    - vendor/symplify/phpstan-rules/config/regex-rules.neon
-    - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
-    - vendor/symplify/phpstan-rules/config/test-rules.neon
-
 parameters:
     paths:
         - src
@@ -15,12 +8,13 @@ parameters:
         - utils/phpstan-behaviors/src
 
     level: 8
-    checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
+        - identifier: missingType.generics
+
         # traits
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface::changeUser\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
@@ -104,11 +98,6 @@ parameters:
         -
             message: '#There should be no empty class#'
             path: tests/Fixtures/Entity/Translatable/ExtendedTranslatableEntityWithJoinTableInheritanceTranslation.php
-
-        # false positive, already checked for type
-        -
-            message: '#Cannot call method getName\(\) on ReflectionClass\|null#'
-            path: src/EventSubscriber/TranslatableEventSubscriber.php
 
         # entities
         -

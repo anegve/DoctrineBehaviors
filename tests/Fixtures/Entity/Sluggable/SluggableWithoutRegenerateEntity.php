@@ -17,15 +17,15 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
 {
     use SluggableTrait;
 
-    #[Column(type: 'string')]
+    #[Column(type: 'string', nullable: true)]
     private ?string $name = null;
 
     #[Id]
-    #[Column(type: 'integer')]
+    #[Column(type: 'integer', nullable: true)]
     #[GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private ?int $id = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

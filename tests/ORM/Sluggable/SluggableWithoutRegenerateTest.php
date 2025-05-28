@@ -38,7 +38,7 @@ final class SluggableWithoutRegenerateTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var SluggableEntity $entity */
+        /** @var SluggableEntity|null $entity */
         $entity = $this->sluggableWithoutRegenerateRepository->find($id);
 
         $this->assertNotNull($entity);

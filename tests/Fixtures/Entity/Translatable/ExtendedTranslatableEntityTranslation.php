@@ -18,7 +18,7 @@ class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTr
     #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    #[Column(type: 'string')]
+    #[Column(type: 'string', nullable: true)]
     private ?string $extendedTitle = null;
 
     public function getExtendedTitle(): string

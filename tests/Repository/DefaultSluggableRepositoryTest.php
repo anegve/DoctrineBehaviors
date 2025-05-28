@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Repository;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
@@ -73,13 +73,18 @@ final class DefaultSluggableRepositoryTest extends TestCase
             ->withConsecutive(['slug', $uniqueSlug], ['id_id', '123'])
             ->willReturnSelf();
 
-        $queryBuilder->expects(self::once())
-            ->method('getQuery')
-            ->willReturn($query = $this->createMock(AbstractQuery::class));
+        $query = $this->getMockBuilder(Query::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getSingleScalarResult'])
+            ->getMock();
 
         $query->expects(self::once())
             ->method('getSingleScalarResult')
             ->willReturn(1);
+
+        $queryBuilder->expects(self::once())
+            ->method('getQuery')
+            ->willReturn($query);
 
         self::assertFalse($this->defaultSluggableRepository->isSlugUniqueFor($sluggable, $uniqueSlug));
     }

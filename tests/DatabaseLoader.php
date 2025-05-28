@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -12,11 +11,7 @@ final class DatabaseLoader
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        Connection $connection
     ) {
-        // @see https://stackoverflow.com/a/35222045/1348344
-        $configuration = $connection->getConfiguration();
-        $configuration->setSQLLogger();
     }
 
     public function reload(): void

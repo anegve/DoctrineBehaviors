@@ -37,7 +37,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var SluggableEntity $entity */
+        /** @var SluggableEntity|null $entity */
         $entity = $this->sluggableRepository->find($id);
 
         $this->assertNotNull($entity);
@@ -45,7 +45,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
     }
 
     /**
-     * @dataProvider provideDataForTest()
+     * @dataProvider provideDataForTest
      */
     public function testNotUpdatedSlug(string $value, string $expectedSlug): void
     {

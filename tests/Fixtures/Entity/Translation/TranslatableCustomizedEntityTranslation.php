@@ -25,7 +25,7 @@ class TranslatableCustomizedEntityTranslation implements TranslationInterface
     #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    #[Column(type: 'string')]
+    #[Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
     public function getId(): int

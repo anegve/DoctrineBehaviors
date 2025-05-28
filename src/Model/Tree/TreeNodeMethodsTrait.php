@@ -80,7 +80,7 @@ trait TreeNodeMethodsTrait
     public function isLeafNode(): bool
     {
         return $this->getChildNodes()
-            ->count() === 0;
+                ->count() === 0;
     }
 
     /**
@@ -192,12 +192,14 @@ trait TreeNodeMethodsTrait
     }
 
     /**
-     * @param Closure $prepare a function to prepare the node before putting into the result
+     * @param ?Closure $prepare a function to prepare the node before putting into the result
+     * @param ?mixed[] $tree
+     * @param-out mixed[] $tree
      */
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = static fn (TreeNodeInterface $node): string => (string) $node;
+            $prepare = static fn(TreeNodeInterface $node): string => (string)$node;
         }
 
         if ($tree === null) {
@@ -223,8 +225,9 @@ trait TreeNodeMethodsTrait
     }
 
     /**
-     * @param Closure $prepare a function to prepare the node before putting into the result
-     * @param array $tree a reference to an array, used internally for recursion
+     * @param ?Closure $prepare a function to prepare the node before putting into the result
+     * @param ?mixed[] $tree a reference to an array, used internally for recursion
+     * @param-out mixed[] $tree
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
@@ -254,7 +257,6 @@ trait TreeNodeMethodsTrait
      */
     public function offsetSet(mixed $offset, $node): void
     {
-        /** @var TreeNodeInterface $this */
         $node->setChildNodeOf($this);
     }
 
@@ -271,7 +273,7 @@ trait TreeNodeMethodsTrait
     /**
      * @return mixed
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->getChildNodes()[$offset];
     }
@@ -288,6 +290,6 @@ trait TreeNodeMethodsTrait
 
         $path = explode($separator, $this->getRealMaterializedPath());
 
-        return array_filter($path, static fn ($item): bool => $item !== '');
+        return array_filter($path, static fn($item): bool => $item !== '');
     }
 }

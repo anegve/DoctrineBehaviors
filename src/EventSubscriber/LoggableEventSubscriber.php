@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Psr\Log\LogLevel;
 use Doctrine\ORM\Events;
 use Psr\Log\LoggerInterface;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 
@@ -58,6 +58,7 @@ final class LoggableEventSubscriber
      */
     private function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
     {
+        /** @var \Doctrine\ORM\EntityManagerInterface $entityManager */
         $entityManager = $lifecycleEventArgs->getObjectManager();
         $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getObject();

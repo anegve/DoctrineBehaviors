@@ -116,7 +116,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     }
 
     /**
-     * @dataProvider provideIsChildNodeOf()
+     * @dataProvider provideIsChildNodeOf
      */
     public function testTestisChildNodeOf(TreeNodeInterface $child, TreeNodeInterface $parent, bool $expected): void
     {
@@ -373,6 +373,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
 
         $tree = $treeNodeRepository->getTree();
+        $this->assertNotNull($tree);
         $this->assertSame($tree[0][0], $entity[0][0]);
     }
 

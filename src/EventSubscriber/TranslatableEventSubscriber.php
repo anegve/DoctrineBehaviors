@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use ReflectionClass;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
@@ -55,6 +55,10 @@ final class TranslatableEventSubscriber
 
         if (is_a($classMetadata->reflClass->getName(), TranslatableInterface::class, true)) {
             $this->mapTranslatable($classMetadata);
+        }
+
+        if (null === $classMetadata->reflClass) {
+            return;
         }
 
         if (is_a($classMetadata->reflClass->getName(), TranslationInterface::class, true)) {
@@ -118,7 +122,7 @@ final class TranslatableEventSubscriber
                 ->getMethod('getTranslatableEntityClass')
                 ->invoke(null);
 
-            /** @var ClassMetadataInfo $classMetadata */
+            /** @var ClassMetadata $classMetadata */
             $classMetadata = $objectManager->getClassMetadata($targetEntity);
 
             $singleIdentifierFieldName = $classMetadata->getSingleIdentifierFieldName();

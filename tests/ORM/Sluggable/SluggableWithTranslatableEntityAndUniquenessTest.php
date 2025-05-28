@@ -39,12 +39,13 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
 
         $this->entityManager->clear();
 
-        /** @var SluggableTranslatableEntity $entity */
+        /** @var SluggableTranslatableEntity|null $entity */
         $entity = $this->translatableRepository->find($id);
+        $this->assertNotNull($entity);
+
         $sluggableTranslatableEntityTranslation = $entity->translate('fr');
         $entityEN = $entity->translate('en');
 
-        $this->assertNotNull($entity);
         $this->assertSame('Lorem ipsum', $sluggableTranslatableEntityTranslation->getTitle());
         $this->assertSame('lorem-ipsum', $sluggableTranslatableEntityTranslation->getSlug());
         $this->assertSame('Lorem ipsum', $entityEN->getTitle());

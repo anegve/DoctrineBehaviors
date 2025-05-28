@@ -15,7 +15,7 @@ abstract class AbstractTranslatableEntityTranslation implements TranslationInter
 {
     use TranslationTrait;
 
-    #[Column(type: 'string')]
+    #[Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
     public function getTitle(): string

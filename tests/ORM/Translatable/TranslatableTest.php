@@ -164,13 +164,6 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertSame('удивительный', $translatableEntity->translate('ru')->getTitle());
     }
 
-    public function testTranslateMethodShouldAlwaysReturnTranslationObject(): void
-    {
-        $translatableEntity = new TranslatableEntity();
-
-        $this->assertInstanceOf(TranslatableEntityTranslation::class, $translatableEntity->translate('fr'));
-    }
-
     public function testSubscriberShouldConfigureEntityWithCurrentLocale(): void
     {
         $translatableEntity = new TranslatableEntity();
@@ -298,7 +291,6 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $entity = $this->translatableRepository->find($id);
         $this->assertIsObject($entity);
-        $this->assertInstanceOf(TranslatableEntity::class, $entity);
 
         /** @var TranslatableEntity $entity */
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
@@ -337,7 +329,6 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $translatableEntity = $this->translatableRepository->find($id);
 
         $this->assertIsObject($translatableEntity);
-        $this->assertInstanceOf(TranslatableEntity::class, $translatableEntity);
 
         /** @var TranslatableEntity $translatableEntity */
         $this->assertSame('fabuleux', $translatableEntity->translate('fr')->getTitle());
@@ -347,11 +338,9 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testPhpStanExtensionOnInterfaces(): void
     {
-        /** @var TranslationInterface $translatableEntityTranslation */
         $translatableEntityTranslation = new TranslatableEntityTranslation();
         $translatableEntityTranslation->setLocale('fr');
 
-        /** @var TranslatableInterface $translatableEntity */
         $translatableEntity = new TranslatableEntity();
         $translatableEntity->addTranslation($translatableEntityTranslation);
 

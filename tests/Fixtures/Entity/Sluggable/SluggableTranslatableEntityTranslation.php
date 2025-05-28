@@ -24,7 +24,7 @@ class SluggableTranslatableEntityTranslation implements TranslationInterface, Sl
     #[GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[Column(type: 'string')]
+    #[Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
     public function getId(): ?int

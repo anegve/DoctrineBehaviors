@@ -35,7 +35,7 @@ final class SluggableMultiTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var SluggableMultiEntity $entity */
+        /** @var SluggableMultiEntity|null $entity */
         $entity = $this->sluggableRepository->find($id);
 
         $this->assertNotNull($entity);

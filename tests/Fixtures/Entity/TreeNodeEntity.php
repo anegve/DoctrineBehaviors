@@ -20,18 +20,19 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, Stringable
     use TreeNodeTrait;
 
     #[Id]
-    #[Column(type: 'integer')]
+    #[Column(type: 'integer', nullable: true)]
     #[GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
     #[Column(type: 'string', length: 255, nullable: true)]
     private ?string $name = null;
 
+    /** @phpstan-ignore-next-line */
     private string $parentNodePath;
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return (string)$this->getName();
     }
 
     public function getId(): ?int
