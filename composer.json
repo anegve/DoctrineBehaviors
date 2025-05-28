@@ -25,8 +25,7 @@
         "symfony/string": "^7.2",
         "symfony/translation-contracts": "^3.5",
         "nette/utils": "^4.0",
-        "ramsey/uuid": "^4.7",
-        "slam/dbal-debugstack-middleware": "^2.1"
+        "ramsey/uuid": "^4.7"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
@@ -41,7 +40,8 @@
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^2.0",
         "roave/security-advisories": "dev-latest",
-        "fig/log-test": "^1.1"
+        "fig/log-test": "^1.1",
+        "slam/dbal-debugstack-middleware": "^2.1"
     },
     "autoload": {
         "psr-4": {
